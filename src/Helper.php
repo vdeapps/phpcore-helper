@@ -58,23 +58,24 @@ class Helper
      *
      * @return string
      */
-    public static function formatted($numValue, $deci = 0, $sep = ' ')
+    public static function formatted($numValue, $deci = 0, $sep = ' ', $dec_point=',')
     {
         if ($numValue == '') {
             return '';
         }
         
-        return number_format($numValue, $deci, ',', $sep);
+        return number_format($numValue, $deci, $dec_point, $sep);
     }
-    
+
     /**
      * Retourne une valeur aléatoire
      *
-     * @param array $tbCheck Contient les valeurs déjà sorties
-     * @param int   $min     borne minimum
-     * @param int   $max     borne maximum
+     * @param int $min borne minimum
+     * @param int $max borne maximum
      *
+     * @param array $tbCheck Contient les valeurs déjà sorties
      * @return bool|int FALSE=>Erreur, sinon la valeur
+     * @throws \Exception
      */
     public static function rand($min = 0, $max = 9999, &$tbCheck = [])
     {
@@ -84,6 +85,7 @@ class Helper
         $maxiter = $max - $min;
         while (in_array($val, $tbCheck)) {
             if ($iter == $maxiter) {
+                throw new \Exception("Nb rand max deja atteint",5);
                 return false;
             }
             $val = rand($min, $max);
