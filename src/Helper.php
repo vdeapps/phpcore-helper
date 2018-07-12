@@ -58,7 +58,7 @@ class Helper
      *
      * @return string
      */
-    public static function formatted($numValue, $deci = 0, $sep = ' ', $dec_point=',')
+    public static function formatted($numValue, $deci = 0, $sep = ' ', $dec_point = ',')
     {
         if ($numValue == '') {
             return '';
@@ -66,14 +66,15 @@ class Helper
         
         return number_format($numValue, $deci, $dec_point, $sep);
     }
-
+    
     /**
      * Retourne une valeur aléatoire
      *
-     * @param int $min borne minimum
-     * @param int $max borne maximum
+     * @param int   $min     borne minimum
+     * @param int   $max     borne maximum
      *
      * @param array $tbCheck Contient les valeurs déjà sorties
+     *
      * @return bool|int FALSE=>Erreur, sinon la valeur
      * @throws \Exception
      */
@@ -85,7 +86,8 @@ class Helper
         $maxiter = $max - $min;
         while (in_array($val, $tbCheck)) {
             if ($iter == $maxiter) {
-                throw new \Exception("Nb rand max deja atteint",5);
+                throw new \Exception("Nb rand max deja atteint", 5);
+                
                 return false;
             }
             $val = rand($min, $max);
@@ -126,7 +128,7 @@ class Helper
      *
      * @return string
      */
-    public static function base64_encode($str, $stripEgal = true)
+    public static function base64Encode($str, $stripEgal = true)
     {
         $str64 = base64_encode($str);
         if ($stripEgal) {
@@ -143,8 +145,51 @@ class Helper
      *
      * @return bool|string
      */
-    public static function base64_decode($str)
+    public static function base64Decode($str)
     {
         return base64_decode(str_pad(strtr($str, '-_', '+/'), strlen($str) % 4, '=', STR_PAD_RIGHT));
+    }
+    
+    /**
+     * Compare 2 tableaux de valeurs ou 2 valeurs
+     *
+     * @param mixed|array $arr1      La variable sera transformée en tableau
+     * @param mixed|array $arr2      La variable sera transformée en tableau
+     * @param string      $operateur default(IN), NOTIN, EQ
+     *
+     * @return boolean
+     */
+    public static function compareValues($arr1 = [], $arr2 = [], $operateur = 'IN')
+    {
+        if (!is_array($arr1)) {
+            $arr1 = [$arr1];
+        }
+        if (!is_array($arr2)) {
+            $arr2 = [$arr2];
+        }
+        
+        if (!is_array($arr1) || !is_array($arr2)) {
+            return false;
+        }
+        
+        switch (strtoupper($operateur)) {
+            case 'IN':
+                $result = (count(array_intersect($arr1, $arr2)) !== 0);
+                break;
+            
+            case 'NOTIN':
+                $result = (count(array_diff($arr1, $arr2)) !== 0);
+                break;
+            
+            case 'EQ':
+                $result = (count(array_intersect($arr1, $arr2)) == count($arr2));
+                break;
+            
+            default:
+                $result = false;
+                break;
+        }
+        
+        return $result;
     }
 }
