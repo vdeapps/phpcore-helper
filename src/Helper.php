@@ -42,7 +42,8 @@ class Helper
         
         if (php_sapi_name() == 'cli') {
             $output = $content;
-        } else {
+        }
+        else {
             $output = '<pre class="debug">' . $content . '</pre>';
         }
         
@@ -188,6 +189,35 @@ class Helper
             default:
                 $result = false;
                 break;
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Retourne le tableau de résulats par une autre clé
+     *
+     * @param array  $array
+     * @param string $newKey
+     *
+     * @param bool   $append add new Row if multiple same key
+     *
+     * @return array
+     */
+    public static function indexedBy(&$array, $newKey, $append = false)
+    {
+        $result = [];
+        $nbRows = count($array);
+        
+        foreach ($array as $row) {
+            $valOfKey = $row[$newKey];
+            
+            if ($append === false) {
+                $result[$valOfKey] = $row;
+            }
+            else {
+                $result[$valOfKey][] = $row;
+            }
         }
         
         return $result;
